@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getDocumentAccess, isRole } from '../src/security/access.js';
 import { safeDownloadName, safeSearchTerm } from '../src/security/filenames.js';
 import { isValidUuid } from '../src/services/audit.js';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
 
 const document = { id: 'doc-1', owner_id: 'owner-1' };
 
@@ -69,5 +74,20 @@ describe('input safety helpers', () => {
     expect(isValidUuid('../secret')).toBe(false);
     expect(isValidUuid(null)).toBe(false);
     expect(isValidUuid('')).toBe(false);
+  });
+});
+
+describe('client-side script safety checks', () => {
+  it('does not reference event.currentTarget after an await in public/app.js', () => {
+    const appJs = fs.readFileSync(path.resolve(here, '../public/app.js'), 'utf-8');
+    const asyncHandlers = appJs.split(/addEventListener\s*\(\s*['"][^'"]+['"]\s*,\s*async\s*\([^)]*\)\s*=>\s*\{/);
+    for (let i = 1; i < asyncHandlers.length; i++) {
+      const block = asyncHandlers[i];
+      const awaitIndex = block.indexOf('await ');
+      if (awaitIndex !== -1) {
+        const afterAwait = block.slice(awaitIndex);
+        expect(afterAwait.includes('event.currentTarget')).toBe(false);
+      }
+    }
   });
 });

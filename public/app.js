@@ -51,19 +51,30 @@ function setSignedIn(user) {
 
 $('#loginForm').addEventListener('submit', async (event) => {
   event.preventDefault();
+  const formElement = event.currentTarget;
+  const button = formElement.querySelector('button[type=submit]');
+  if (button) button.disabled = true;
   showMessage(loginMessage, 'Signing in…');
-  const button = event.currentTarget.querySelector('button[type=submit]');
-  button.disabled = true;
+  let result = null;
   try {
-    const form = new FormData(event.currentTarget);
-    const result = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) });
+    const form = new FormData(formElement);
+    result = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) });
+  } catch (apiError) {
+    showMessage(loginMessage, apiError.message, 'error');
+    return;
+  } finally {
+    if (button) button.disabled = false;
+  }
+
+  try {
     setSignedIn(result.user);
-    event.currentTarget.reset();
+    formElement.reset();
     showMessage(loginMessage, 'Signed in successfully.', 'success');
     await refreshDocuments();
     if (currentUser.role === 'administrator') await refreshAudit();
-  } catch (error) { showMessage(loginMessage, error.message, 'error'); }
-  finally { button.disabled = false; }
+  } catch (uiError) {
+    console.error('Post-login UI error:', uiError);
+  }
 });
 
 $('#logoutButton').addEventListener('click', async () => {
@@ -76,18 +87,30 @@ $('#logoutButton').addEventListener('click', async () => {
 
 $('#uploadForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const button = event.currentTarget.querySelector('button[type=submit]');
-  button.disabled = true;
+  const formElement = event.currentTarget;
+  const button = formElement.querySelector('button[type=submit]');
+  if (button) button.disabled = true;
   showMessage(uploadMessage, 'Uploading and validating file…');
+  let result = null;
   try {
-    const form = new FormData(event.currentTarget);
-    const result = await api('/api/documents', { method: 'POST', body: form });
-    event.currentTarget.reset();
-    event.currentTarget.elements.category.value = 'General';
+    const form = new FormData(formElement);
+    result = await api('/api/documents', { method: 'POST', body: form });
+  } catch (apiError) {
+    showMessage(uploadMessage, apiError.message, 'error');
+    return;
+  } finally {
+    if (button) button.disabled = false;
+  }
+
+  try {
+    formElement.reset();
+    if (formElement.elements.category) formElement.elements.category.value = 'General';
     showMessage(uploadMessage, `Uploaded “${result.document.title}”.`, 'success');
     await refreshDocuments();
-  } catch (error) { showMessage(uploadMessage, error.message, 'error'); }
-  finally { button.disabled = false; }
+  } catch (uiError) {
+    console.error('Post-upload UI error:', uiError);
+    showMessage(uploadMessage, `Uploaded “${result.document.title}”, but refreshing documents encountered an issue.`, 'warning');
+  }
 });
 
 async function refreshDocuments() {
@@ -181,16 +204,23 @@ async function refreshPermissions() {
 
 $('#shareForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const canRead = form.get('can_read') === 'on';
-  const canEdit = form.get('can_edit') === 'on';
+  const formElement = event.currentTarget;
+  const button = formElement.querySelector('button[type=submit]');
+  if (button) button.disabled = true;
+  const formData = new FormData(formElement);
+  const canRead = formData.get('can_read') === 'on';
+  const canEdit = formData.get('can_edit') === 'on';
   showMessage($('#shareMessage'), 'Saving permission…');
   try {
-    await api(`/api/documents/${encodeURIComponent(currentShareDocument.id)}/permissions`, { method: 'POST', body: JSON.stringify({ email: form.get('email'), can_read: canRead, can_edit: canEdit }) });
+    await api(`/api/documents/${encodeURIComponent(currentShareDocument.id)}/permissions`, { method: 'POST', body: JSON.stringify({ email: formData.get('email'), can_read: canRead, can_edit: canEdit }) });
     showMessage($('#shareMessage'), 'Permission saved. The server will check it on each document request.', 'success');
-    event.currentTarget.elements.email.value = '';
+    if (formElement.elements.email) formElement.elements.email.value = '';
     await refreshPermissions();
-  } catch (error) { showMessage($('#shareMessage'), error.message, 'error'); }
+  } catch (error) {
+    showMessage($('#shareMessage'), error.message, 'error');
+  } finally {
+    if (button) button.disabled = false;
+  }
 });
 
 $('#permissionList').addEventListener('click', async (event) => {
