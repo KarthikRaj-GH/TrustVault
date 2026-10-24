@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>TrustVault — Secure document sharing</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="TrustVault home"><span class="brand-mark">T</span><span>TrustVault</span></a>
+    <span class="topbar-note">Private documents. Accountable access.</span>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">SECURE DOCUMENT WORKSPACE</p>
+      <h1>Share the right document<br><span>with the right person.</span></h1>
+      <p class="hero-copy">Access is checked by the server for every document request. Security actions are recorded for review.</p>
+    </section>
+
+    <section id="loginPanel" class="panel login-panel" aria-labelledby="loginTitle">
+      <div class="panel-heading"><div><p class="eyebrow">WELCOME BACK</p><h2 id="loginTitle">Sign in to TrustVault</h2></div></div>
+      <form id="loginForm" class="form-grid">
+        <label>Email address<input type="email" name="email" autocomplete="username" required maxlength="254"></label>
+        <label>Password<input type="password" name="password" autocomplete="current-password" required maxlength="1024"></label>
+        <button class="button primary" type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form>
+      <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
+      <p class="hint">Demo accounts are created by the administrator in Supabase. No public self-registration is enabled.</p>
+    </section>
+
+    <section id="appPanel" class="hidden" aria-label="Document workspace">
+      <div class="workspace-head panel">
+        <div><p class="eyebrow">YOUR WORKSPACE</p><h2 id="welcomeTitle">Documents</h2><p id="userSummary" class="muted"></p></div>
+        <button id="logoutButton" class="button secondary" type="button">Sign out</button>
+      </div>
+
+      <section id="uploadPanel" class="panel" aria-labelledby="uploadTitle">
+        <div class="panel-heading"><div><p class="eyebrow">ADD A FILE</p><h2 id="uploadTitle">Upload document</h2></div><span class="pill">PDF · PNG · JPEG</span></div>
+        <form id="uploadForm" class="form-grid two-cols">
+          <label>Document title<input name="title" maxlength="160" placeholder="e.g. Client contract" required></label>
+          <label>Category<input name="category" maxlength="80" placeholder="e.g. Contracts" value="General"></label>
+          <label class="file-field">Select a file<input type="file" name="file" accept="application/pdf,image/png,image/jpeg" required></label>
+          <div class="form-action"><button class="button primary" type="submit">Upload securely</button></div>
+        </form>
+        <p id="uploadMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="documentsTitle">
+        <div class="panel-heading"><div><p class="eyebrow">PRIVATE FILES</p><h2 id="documentsTitle">Documents</h2></div><span id="documentCount" class="pill">0 files</span></div>
+        <form id="searchForm" class="search-row">
+          <label class="search-input">Search by title<input type="search" name="q" maxlength="100" placeholder="Find a document"></label>
+          <label>Category<input type="text" name="category" maxlength="80" placeholder="Any category"></label>
+          <button class="button secondary" type="submit">Search</button>
+          <button id="clearSearch" class="button ghost" type="button">Clear</button>
+        </form>
+        <p id="documentsMessage" class="message" role="status" aria-live="polite"></p>
+        <div id="documentList" class="document-list"><div class="empty-state">Sign in to see documents.</div></div>
+      </section>
+
+      <section id="auditPanel" class="panel hidden" aria-labelledby="auditTitle">
+        <div class="panel-heading"><div><p class="eyebrow">ACCOUNTABILITY</p><h2 id="auditTitle">Recent audit events</h2></div><button id="refreshAudit" class="button secondary" type="button">Refresh</button></div>
+        <div id="auditList" class="audit-list"></div>
+      </section>
+    </section>
+    <p class="footer-note">TrustVault · Challenge project · Use only approved demo data.</p>
+  </main>
+  <dialog id="shareDialog" class="dialog">
+    <form id="shareForm" method="dialog">
+      <div class="panel-heading"><div><p class="eyebrow">DOCUMENT ACCESS</p><h2>Share a document</h2></div><button id="closeShare" class="icon-button" type="button" aria-label="Close">×</button></div>
+      <input type="hidden" name="documentId">
+      <label>Existing TrustVault user email<input type="email" name="email" required maxlength="254" placeholder="viewer@example.com"></label>
+      <label class="check-line"><input type="checkbox" name="can_read" checked> Can read and download</label>
+      <label class="check-line"><input type="checkbox" name="can_edit"> Can edit document details or replace file</label>
+      <button class="button primary" type="submit">Grant access</button>
+      <p id="shareMessage" class="message" role="status" aria-live="polite"></p>
+      <div id="permissionList" class="permission-list"></div>
+    </form>
+  </dialog>
+</body>
+</html>
