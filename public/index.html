@@ -3,78 +3,266 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <title>TrustVault — Secure document sharing</title>
+  <meta name="theme-color" content="#070b14">
+  <title>TrustVault â€” Secure document sharing</title>
   <link rel="stylesheet" href="/styles.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="TrustVault home"><span class="brand-mark">T</span><span>TrustVault</span></a>
-    <span class="topbar-note">Private documents. Accountable access.</span>
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="TrustVault home">
+        <span class="brand-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </span>
+        <span class="brand-name">TrustVault</span>
+      </a>
+      <div class="topbar-right">
+        <span class="system-status-pill">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>Zero-Trust Architecture</span>
+        </span>
+        <span class="topbar-note">Private documents. Accountable access.</span>
+      </div>
+    </div>
   </header>
+
   <main class="container">
     <section class="hero">
-      <p class="eyebrow">SECURE DOCUMENT WORKSPACE</p>
-      <h1>Share the right document<br><span>with the right person.</span></h1>
-      <p class="hero-copy">Access is checked by the server for every document request. Security actions are recorded for review.</p>
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>SECURE DOCUMENT WORKSPACE</span>
+      </div>
+      <h1>Share the right document<br><span class="hero-accent">with the right person.</span></h1>
+      <p class="hero-copy">Every request is authenticated and authorized on the server. File storage is isolated, permissions revoke instantly, and all security actions are logged to an append-only audit trail.</p>
+
+      <div class="hero-highlights">
+        <span class="highlight-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Per-Document ACLs
+        </span>
+        <span class="highlight-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Private Object Storage
+        </span>
+        <span class="highlight-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Immediate Revocation
+        </span>
+        <span class="highlight-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Append-Only Audit Trail
+        </span>
+      </div>
     </section>
 
+    <!-- Sign In Panel -->
     <section id="loginPanel" class="panel login-panel" aria-labelledby="loginTitle">
-      <div class="panel-heading"><div><p class="eyebrow">WELCOME BACK</p><h2 id="loginTitle">Sign in to TrustVault</h2></div></div>
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">WELCOME BACK</p>
+          <h2 id="loginTitle">Sign in to TrustVault</h2>
+        </div>
+        <span class="pill">Secure Session</span>
+      </div>
       <form id="loginForm" class="form-grid">
-        <label>Email address<input type="email" name="email" autocomplete="username" required maxlength="254"></label>
-        <label>Password<input type="password" name="password" autocomplete="current-password" required maxlength="1024"></label>
-        <button class="button primary" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        <label>
+          <span>Email address</span>
+          <input type="email" name="email" autocomplete="username" required maxlength="254" placeholder="e.g. admin.test@example.com">
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" name="password" autocomplete="current-password" required maxlength="1024" placeholder="Enter your password">
+        </label>
+        <button class="button primary" type="submit">
+          <span>Sign in</span>
+          <span class="btn-arrow" aria-hidden="true">â†’</span>
+        </button>
       </form>
       <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
-      <p class="hint">Demo accounts are created by the administrator in Supabase. No public self-registration is enabled.</p>
+      <div class="hint-card">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+        </svg>
+        <p class="hint">Demo accounts are provisioned directly in PostgreSQL. Self-registration is disabled by design.</p>
+      </div>
     </section>
 
+    <!-- Document Workspace Panel -->
     <section id="appPanel" class="hidden" aria-label="Document workspace">
+      <!-- Workspace User Bar -->
       <div class="workspace-head panel">
-        <div><p class="eyebrow">YOUR WORKSPACE</p><h2 id="welcomeTitle">Documents</h2><p id="userSummary" class="muted"></p></div>
-        <button id="logoutButton" class="button secondary" type="button">Sign out</button>
+        <div class="user-greeting">
+          <div class="user-avatar-badge" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div>
+            <p class="eyebrow">ACTIVE SESSION</p>
+            <h2 id="welcomeTitle">Documents</h2>
+            <p id="userSummary" class="muted user-summary-tag"></p>
+          </div>
+        </div>
+        <button id="logoutButton" class="button secondary" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" x2="9" y1="12" y2="12"/>
+          </svg>
+          <span>Sign out</span>
+        </button>
       </div>
 
+      <!-- Upload Panel (Hidden for Viewers) -->
       <section id="uploadPanel" class="panel" aria-labelledby="uploadTitle">
-        <div class="panel-heading"><div><p class="eyebrow">ADD A FILE</p><h2 id="uploadTitle">Upload document</h2></div><span class="pill">PDF · PNG · JPEG</span></div>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ENCRYPTED STORAGE</p>
+            <h2 id="uploadTitle">Upload document</h2>
+          </div>
+          <span class="pill format-pill">PDF Â· PNG Â· JPEG</span>
+        </div>
         <form id="uploadForm" class="form-grid two-cols">
-          <label>Document title<input name="title" maxlength="160" placeholder="e.g. Client contract" required></label>
-          <label>Category<input name="category" maxlength="80" placeholder="e.g. Contracts" value="General"></label>
-          <label class="file-field">Select a file<input type="file" name="file" accept="application/pdf,image/png,image/jpeg" required></label>
-          <div class="form-action"><button class="button primary" type="submit">Upload securely</button></div>
+          <label>
+            <span>Document title</span>
+            <input name="title" maxlength="160" placeholder="e.g. Q3 Financial Statement" required>
+          </label>
+          <label>
+            <span>Category</span>
+            <input name="category" maxlength="80" placeholder="e.g. Financial" value="General">
+          </label>
+          <label class="file-field">
+            <span>Select file (magic byte verified)</span>
+            <input type="file" name="file" accept="application/pdf,image/png,image/jpeg" required>
+          </label>
+          <div class="form-action">
+            <button class="button primary" type="submit">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" x2="12" y1="3" y2="15"/>
+              </svg>
+              <span>Upload securely</span>
+            </button>
+          </div>
         </form>
         <p id="uploadMessage" class="message" role="status" aria-live="polite"></p>
       </section>
 
+      <!-- Documents List Panel -->
       <section class="panel" aria-labelledby="documentsTitle">
-        <div class="panel-heading"><div><p class="eyebrow">PRIVATE FILES</p><h2 id="documentsTitle">Documents</h2></div><span id="documentCount" class="pill">0 files</span></div>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">AUTHORIZED FILES</p>
+            <h2 id="documentsTitle">Documents</h2>
+          </div>
+          <span id="documentCount" class="pill count-pill">0 files</span>
+        </div>
+
         <form id="searchForm" class="search-row">
-          <label class="search-input">Search by title<input type="search" name="q" maxlength="100" placeholder="Find a document"></label>
-          <label>Category<input type="text" name="category" maxlength="80" placeholder="Any category"></label>
-          <button class="button secondary" type="submit">Search</button>
-          <button id="clearSearch" class="button ghost" type="button">Clear</button>
+          <label class="search-input">
+            <span>Filter by title</span>
+            <input type="search" name="q" maxlength="100" placeholder="Search document titlesâ€¦">
+          </label>
+          <label>
+            <span>Category</span>
+            <input type="text" name="category" maxlength="80" placeholder="All categories">
+          </label>
+          <button class="button secondary search-btn" type="submit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/>
+            </svg>
+            <span>Search</span>
+          </button>
+          <button id="clearSearch" class="button ghost" type="button">Reset</button>
         </form>
+
         <p id="documentsMessage" class="message" role="status" aria-live="polite"></p>
-        <div id="documentList" class="document-list"><div class="empty-state">Sign in to see documents.</div></div>
+        <div id="documentList" class="document-list">
+          <div class="empty-state">Sign in to see documents.</div>
+        </div>
       </section>
 
+      <!-- Audit Panel (Visible only to Administrators) -->
       <section id="auditPanel" class="panel hidden" aria-labelledby="auditTitle">
-        <div class="panel-heading"><div><p class="eyebrow">ACCOUNTABILITY</p><h2 id="auditTitle">Recent audit events</h2></div><button id="refreshAudit" class="button secondary" type="button">Refresh</button></div>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">IMMUTABLE SECURITY TRAIL</p>
+            <h2 id="auditTitle">Recent audit events</h2>
+          </div>
+          <button id="refreshAudit" class="button secondary refresh-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+            </svg>
+            <span>Refresh</span>
+          </button>
+        </div>
         <div id="auditList" class="audit-list"></div>
       </section>
     </section>
-    <p class="footer-note">TrustVault · Challenge project · Use only approved demo data.</p>
+
+    <footer class="footer-note">
+      <span>TrustVault Secure Document Storage</span>
+      <span class="footer-sep">Â·</span>
+      <span>Hiring Challenge Project</span>
+      <span class="footer-sep">Â·</span>
+      <span>PostgreSQL Row-Level Security</span>
+    </footer>
   </main>
+
+  <!-- Share Permission Modal Dialog -->
   <dialog id="shareDialog" class="dialog">
     <form id="shareForm" method="dialog">
-      <div class="panel-heading"><div><p class="eyebrow">DOCUMENT ACCESS</p><h2>Share a document</h2></div><button id="closeShare" class="icon-button" type="button" aria-label="Close">×</button></div>
+      <div class="panel-heading dialog-header">
+        <div>
+          <p class="eyebrow">GRANULAR ACCESS CONTROL</p>
+          <h2>Share a document</h2>
+        </div>
+        <button id="closeShare" class="icon-button" type="button" aria-label="Close dialog">Ã—</button>
+      </div>
       <input type="hidden" name="documentId">
-      <label>Existing TrustVault user email<input type="email" name="email" required maxlength="254" placeholder="viewer@example.com"></label>
-      <label class="check-line"><input type="checkbox" name="can_read" checked> Can read and download</label>
-      <label class="check-line"><input type="checkbox" name="can_edit"> Can edit document details or replace file</label>
-      <button class="button primary" type="submit">Grant access</button>
+
+      <label>
+        <span>Existing TrustVault user email</span>
+        <input type="email" name="email" required maxlength="254" placeholder="viewer.test@example.com">
+      </label>
+
+      <div class="checkbox-group">
+        <label class="check-line">
+          <input type="checkbox" name="can_read" checked>
+          <span class="check-label">
+            <strong>Can read and download</strong>
+            <small>Allows downloading the original file and reading metadata</small>
+          </span>
+        </label>
+
+        <label class="check-line">
+          <input type="checkbox" name="can_edit">
+          <span class="check-label">
+            <strong>Can edit and replace</strong>
+            <small>Allows updating metadata or replacing file (implies read)</small>
+          </span>
+        </label>
+      </div>
+
+      <button class="button primary grant-btn" type="submit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" x2="19" y1="8" y2="14"/>
+          <line x1="22" x2="16" y1="11" y2="11"/>
+        </svg>
+        <span>Grant access</span>
+      </button>
+
       <p id="shareMessage" class="message" role="status" aria-live="polite"></p>
       <div id="permissionList" class="permission-list"></div>
     </form>
